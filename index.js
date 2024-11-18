@@ -13,9 +13,13 @@ const port = process.env.PORT || 3000;
 
 app.use(express.json());
 
+
 app.post('/api/bestrx', handleBestrx);
 app.post('/api/primerx', handlePrimerx);
 app.post('/api/bodytrace', handleBodytrace);
+app.get("/",async (req,res)=>{
+	res.send("runeed successfully")
+})
 
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
