@@ -8,7 +8,7 @@ const apiKey = process.env.AZURE_STORAGE_BESTRXACCOUNT_KEY;
 const containerName = process.env.BESTRXCONTAINER_NAME;
 
 // Third-party API URL
-const THIRD_PARTY_URL = 'http://patientinfo.data.medisticshealth.com/upload/uploadBestrx';
+const THIRD_PARTY_URL = 'https://clinicalelig-node.medistics.io/upload/uploadBestrx';
 
 // Set up Azure Blob Storage Client
 const blobServiceClient = BlobServiceClient.fromConnectionString(`DefaultEndpointsProtocol=https;AccountName=${accountName};AccountKey=${apiKey};EndpointSuffix=core.windows.net`);
@@ -20,19 +20,23 @@ export const handleBestrx = async (req, res) => {
         if (!Array.isArray(data)) {
             data = [data]; // Wrap in an array if it's a single object
         }
-
-        console.log("Received data:", data);
+        // console.log("Received data:", data);
         // Save each record to Azure Blob Storage
         await saveRecordsToBlob(data);
 
-        // Send data to third-party API
-        /*const thirdPartyResponse = await sendToThirdParty(data);
+        let thirdPartyResponse;
 
-         console.log("Third-party API response:", thirdPartyResponse);*/
-        // Send the same data back in response
+        try {
+            thirdPartyResponse = await sendToThirdParty(data);
+            // console.log("Third-party API response:", thirdPartyResponse);
+        } catch (error) {
+            console.error("Error sending data to third-party:", error.message);
+            // Handle the third-party API error gracefully and proceed
+        }
         res.status(200).json({
             message: "Data processed successfully",
-            // thirdPartyResponse: thirdPartyResponse.data
+            thirdPartyResponse: thirdPartyResponse ? thirdPartyResponse.data : null // Send data if available
+
         });
     } catch (error) {
         console.error("Error processing data:", error);
@@ -45,7 +49,7 @@ export const handleBestrx = async (req, res) => {
 // Save all records to Azure Blob Storage with date-wise folder structure
 async function saveRecordsToBlob(records) {
     const dateTime = new Date();
-    const dateString = dateTime.toISOString().split('T')[0]; // YYYY-MM-DD
+    const dateString = dateTime.toISOString().split('T')[0]; //YYYY-MM-DD
     const timeString = dateTime.toISOString().split('T')[1].split('.')[0].replace(/:/g, '-'); // HH-MM-SS
 
 
@@ -69,10 +73,25 @@ async function saveRecordsToBlob(records) {
 // Send data to third-party API endpoint
 async function sendToThirdParty(data) {
     try {
-        const response = await axios.post(THIRD_PARTY_URL, data);
+        if (Array.isArray(data)) {
+            data = data[0];
+        }
+        // console.log("Request Data API " + JSON.stringify(data));
+        const response = await axios.post(THIRD_PARTY_URL, data, {
+            headers: {
+                'Content-Type': 'application/json',
+                'id': process.env.SECRET_ID
+            }
+        });
         return response;
     } catch (error) {
-        console.error("Error sending data to third-party:", error);
+        console.error("Error sending data to third-party:", error.message);
+        if (error.response) {
+            console.error("Response data:", error.response.data);
+        }else {
+            console.error("General error:", error.message);
+        }
         throw new Error("Third-party API call failed.");
     }
 }
+
