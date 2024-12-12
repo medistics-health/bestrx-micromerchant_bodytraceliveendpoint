@@ -5,7 +5,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 const accountName = process.env.AZURE_STORAGE_BESTRXACCOUNT_NAME;
 const apiKey = process.env.AZURE_STORAGE_BESTRXACCOUNT_KEY;
-const containerName = process.env.BESTRXCONTAINER_NAME;
+const containerName = process.env.BESTRXCONTAINER_NAME; 
 
 // Third-party API URL
 const THIRD_PARTY_URL = 'https://clinicalelig-node.medistics.io/upload/uploadBestrx';
