@@ -17,27 +17,41 @@ const containerClient = blobServiceClient.getContainerClient(containerName);
 export const handleBestrx = async (req, res) => {
     try {
         let data = req.body;
-        if (!Array.isArray(data)) {
-            data = [data]; // Wrap in an array if it's a single object
-        }
-        // console.log("Received data:", data);
-        // Save each record to Azure Blob Storage
-        await saveRecordsToBlob(data);
-
-        let thirdPartyResponse;
-
-        try {
-            thirdPartyResponse = await sendToThirdParty(data);
-            // console.log("Third-party API response:", thirdPartyResponse);
-        } catch (error) {
-            console.error("Error sending data to third-party:", error.message);
-            // Handle the third-party API error gracefully and proceed
-        }
+        if(!data)
+            res.status(422).json({
+                message: "Unprocessable entity",
+            });
         res.status(200).json({
-            message: "Data processed successfully",
-            thirdPartyResponse: thirdPartyResponse ? thirdPartyResponse.data : null // Send data if available
-
+            message: "Data received successfully.",
         });
+        setImmediate(async () => {
+            try {
+                if (!Array.isArray(data)) {
+                    data = [data]; // Wrap in an array if it's a single object
+                }
+                // console.log("Received data:", data);
+                // Save each record to Azure Blob Storage
+                
+                var status = await saveRecordsToBlob(data);
+                if(status)
+                   var statusThirdParty = await sendToThirdParty(data);
+                    // console.log("Third-party API response:", thirdPartyResponse);
+                } catch (error) {
+                    console.error("Error sending data to third-party:", error.message);
+                    // Handle the third-party API error gracefully and proceed
+                }
+                status && statusThirdParty? setTimeout(() => {
+                    console.log('Background task completed');
+                    // You could notify the client via email, push notification, etc.
+                  }, 5000)
+                  :
+                  setTimeout(() => {
+                    !status?console.log('Background task Failed due to BlobUpload'):console.log('Background task Faileddue to ThirdParty');
+                    // You could notify the client via email, push notification, etc.
+                  }, 5000)
+                    // Simulate task duration (5 seconds)
+          });
+       
     } catch (error) {
         console.error("Error processing data:", error);
         res.status(500).json({
@@ -48,7 +62,8 @@ export const handleBestrx = async (req, res) => {
 
 // Save all records to Azure Blob Storage with date-wise folder structure
 async function saveRecordsToBlob(records) {
-    const dateTime = new Date();
+    try {
+        const dateTime = new Date();
     const dateString = dateTime.toISOString().split('T')[0]; //YYYY-MM-DD
     const timeString = dateTime.toISOString().split('T')[1].split('.')[0].replace(/:/g, '-'); // HH-MM-SS
 
@@ -67,7 +82,13 @@ async function saveRecordsToBlob(records) {
         const uploadBlobResponse = await blockBlobClient.upload(JSON.stringify(record), Buffer.byteLength(JSON.stringify(record)));
 
         console.log(`Data uploaded to blob storage with name: ${blobName}`);
+        return true
     }
+    } catch (error) {
+        console.log(`Data uploaded to blob storage failed: ${blobName}`);
+        return false
+    }
+    
 }
 
 // Send data to third-party API endpoint
@@ -83,7 +104,7 @@ async function sendToThirdParty(data) {
                 'id': process.env.SECRET_ID
             }
         });
-        return response;
+        return response.data?true:false;
     } catch (error) {
         console.error("Error sending data to third-party:", error.message);
         if (error.response) {
@@ -91,6 +112,7 @@ async function sendToThirdParty(data) {
         }else {
             console.error("General error:", error.message);
         }
+        return false
         throw new Error("Third-party API call failed.");
     }
 }
