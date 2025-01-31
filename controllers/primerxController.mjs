@@ -21,7 +21,7 @@ export const handlePrimerx = async (req, res) => {
     try {
         let data = req.body;
         if(!data)
-            res.status(422).json({
+            return res.status(422).json({
                 message: "Unprocessable entity",
             });
         res.status(200).json({

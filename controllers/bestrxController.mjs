@@ -18,7 +18,7 @@ export const handleBestrx = async (req, res) => {
     try {
         let data = req.body;
         if(!data)
-            res.status(422).json({
+            return res.status(422).json({
                 message: "Unprocessable entity",
             });
         res.status(200).json({
@@ -66,7 +66,7 @@ async function saveRecordsToBlob(records) {
         const dateTime = new Date();
     const dateString = dateTime.toISOString().split('T')[0]; //YYYY-MM-DD
     const timeString = dateTime.toISOString().split('T')[1].split('.')[0].replace(/:/g, '-'); // HH-MM-SS
-
+    
 
     // Iterate over each record and upload to Blob Storage
     for (const record of records) {
@@ -82,8 +82,9 @@ async function saveRecordsToBlob(records) {
         const uploadBlobResponse = await blockBlobClient.upload(JSON.stringify(record), Buffer.byteLength(JSON.stringify(record)));
 
         console.log(`Data uploaded to blob storage with name: ${blobName}`);
-        return true
+       
     }
+     return true
     } catch (error) {
         console.log(`Data uploaded to blob storage failed: ${blobName}`);
         return false
