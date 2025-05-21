@@ -10,7 +10,10 @@ const containername = process.env.PRIMERXCONTAINER_NAME;
 
 
 // Third-party API URL
-const THIRD_PARTY_URL = 'https://clinicalelig-node.medistics.io/upload/uploadMicromerchant';
+// const THIRD_PARTY_URL = 'https://clinicalelig-node.medistics.io/upload/uploadMicromerchant';
+// const THIRD_PARTY_URL = 'https://api.medistics.health/api/micromerchant';
+const THIRD_PARTY_URL = 'https://api.staging.medistics.io/api/micromerchant';
+
 
 // Set up Azure Blob Storage Client
 const blobServiceClient = BlobServiceClient.fromConnectionString(`DefaultEndpointsProtocol=https;AccountName=${accountName};AccountKey=${apiKey};EndpointSuffix=core.windows.net`);
@@ -101,7 +104,8 @@ async function sendToThirdParty(data) {
         // console.log("Request Data API " + JSON.stringify(data));
         const response = await axios.post(THIRD_PARTY_URL, data, {
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${process.env.PrimerxToken}`
             }
         });
         return response.data?true:false;

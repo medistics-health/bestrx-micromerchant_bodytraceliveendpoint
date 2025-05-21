@@ -8,8 +8,9 @@ const apiKey = process.env.AZURE_STORAGE_BESTRXACCOUNT_KEY;
 const containerName = process.env.BESTRXCONTAINER_NAME; 
 
 // Third-party API URL
-const THIRD_PARTY_URL = 'https://clinicalelig-node.medistics.io/upload/uploadBestrx';
+// const THIRD_PARTY_URL = 'https://clinicalelig-node.medistics.io/upload/uploadBestrx';
 
+const THIRD_PARTY_URL = 'https://api.medistics.health/api/bestrx';
 // Set up Azure Blob Storage Client
 const blobServiceClient = BlobServiceClient.fromConnectionString(`DefaultEndpointsProtocol=https;AccountName=${accountName};AccountKey=${apiKey};EndpointSuffix=core.windows.net`);
 const containerClient = blobServiceClient.getContainerClient(containerName);
@@ -102,7 +103,7 @@ async function sendToThirdParty(data) {
         const response = await axios.post(THIRD_PARTY_URL, data, {
             headers: {
                 'Content-Type': 'application/json',
-                'id': process.env.SECRET_ID
+                'Authorization': `Bearer ${process.env.bestrxToken}`
             }
         });
         return response.data?true:false;
