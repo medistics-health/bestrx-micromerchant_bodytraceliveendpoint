@@ -98,16 +98,18 @@ async function saveRecordsToBlob(records) {
 
 async function sendToThirdParty(data) {
     try {
+        
         if (Array.isArray(data)) {
             data = data[0];
         }
-        // console.log("Request Data API " + JSON.stringify(data));
+        console.log("Request Data API " + JSON.stringify(data));
         const response = await axios.post(THIRD_PARTY_URL, data, {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${process.env.PrimerxToken}`
             }
         });
+        // console.log("APi response "+JSON.stringify(response.data));
         return response.data?true:false;
     } catch (error) {
         console.error("Error sending data to third-party:", error.message);
