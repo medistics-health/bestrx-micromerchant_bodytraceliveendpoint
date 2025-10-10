@@ -12,6 +12,7 @@ const containername = process.env.PRIMERXCONTAINER_NAME;
 // Third-party API URL
 // const THIRD_PARTY_URL = 'https://clinicalelig-node.medistics.io/upload/uploadMicromerchant';
 const THIRD_PARTY_URL = 'https://api.medistics.health/api/micromerchant';
+const THIRD_PARTY_URL = 'https://importhistoricaldata.lemonocean-9dfffc9f.centralus.azurecontainerapps.io/api/micromerchant';
 // const THIRD_PARTY_URL = 'https://api.staging.medistics.io/api/micromerchant';
 
 
