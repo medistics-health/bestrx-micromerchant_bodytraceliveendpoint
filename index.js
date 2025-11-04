@@ -5,7 +5,7 @@ import { handlePrimerx } from './controllers/primerxController.mjs';
 import { handleBodytrace } from './controllers/bodytraceController.mjs';
 import dotenv from 'dotenv';
 // dotenv.config();
-dotenv.config({ path: './.env' });
+dotenv.config({ path: '.env' });
 
 const app = express();
 const port = process.env.PORT || 4000;
