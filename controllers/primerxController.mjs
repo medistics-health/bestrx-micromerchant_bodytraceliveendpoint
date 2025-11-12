@@ -9,7 +9,7 @@ const accountName = process.env.AZURE_STORAGE_PRIMERXACCOUNT_NAME;
 const apiKey = process.env.AZURE_STORAGE_PRIMERXACCOUNT_KEY;
 const containerName = process.env.PRIMERXCONTAINER_NAME;
 // const THIRD_PARTY_URL = 'https://api.medistics.health/api/micromerchant';
-const THIRD_PARTY_URL = 'https://importhistoricaldata.lemonocean-9dfffc9f.centralus.azurecontainerapps.io/api/micromerchant';
+const THIRD_PARTY_URL = 'https://importhistoricaldata.purpledune-ecfe60ec.centralus.azurecontainerapps.io/api/micromerchant';
 
 // Azure Blob setup
 const blobServiceClient = BlobServiceClient.fromConnectionString(
