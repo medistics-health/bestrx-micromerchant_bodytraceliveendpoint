@@ -12,7 +12,7 @@ const containerName = process.env.BESTRXCONTAINER_NAME;
 // const THIRD_PARTY_URL = 'https://clinicalelig-node.medistics.io/upload/uploadBestrx';
 // const THIRD_PARTY_URL = 'https://api.staging.medistics.io/api/bestrx';
 // const THIRD_PARTY_URL = 'https://api.medistics.health/api/bestrx';
-const THIRD_PARTY_URL = 'https://importhistoricaldata.lemonocean-9dfffc9f.centralus.azurecontainerapps.io/api/bestrx';
+const THIRD_PARTY_URL = 'https://importhistoricaldata.purpledune-ecfe60ec.centralus.azurecontainerapps.io/api/bestrx';
 
 // AZURE BLOB STORAGE SETUP
 const blobServiceClient = BlobServiceClient.fromConnectionString(
