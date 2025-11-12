@@ -1,4 +1,4 @@
-/ index.js
+// index.js
 import express from 'express';
 import { handleBestrx } from './controllers/bestrxController.mjs';
 import { handlePrimerx } from './controllers/primerxController.mjs';
