@@ -94,7 +94,14 @@ async function sendToThirdParty(data) {
         'Authorization': `Bearer ${process.env.bestrxToken}`
       }
     });
-
+    const responseStaging = await axios.post('https://api.staging.medistics.io/api/bestrx', record, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${process.env.bestrxToken}`
+      }
+    });
+     const messageStage = responseStaging.data?.message || 'Success';
+    console.log('✅ Third-party API response Staging:', responseStaging.status, messageStage);
     const message = response.data?.message || 'Success';
     console.log('✅ Third-party API response:', response.status, message);
 
