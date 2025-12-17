@@ -11,8 +11,9 @@ const containername = process.env.BODYTRACECONTAINER_NAME;
 
 // Third-party API URL
 const THIRD_PARTY_URL = 'https://medical-history-api.ivirahealth.com/api/v1/rpm-readings/createForBodyTrace';
-const MEDISTICS_URL =   'https://api.staging.medistics.io/portal/patient-observation';
-const MEDISTICS_COOKIE = 'asid=tQ2TNP25NjuZpfvLeOfQVX1B7fc4qHQuBST1aDJiOLYrQH6F4MwtSUd34jGR3sDM';
+// const MEDISTICS_URL =   'https://api.staging.medistics.io/portal/patient-observation';
+const MEDISTICS_URL =   'https://api.medistics.health/portal/patient-observation';
+// const MEDISTICS_COOKIE = 'asid=tQ2TNP25NjuZpfvLeOfQVX1B7fc4qHQuBST1aDJiOLYrQH6F4MwtSUd34jGR3sDM';
 // Set up Azure Blob Storage Client
 const blobServiceClient = BlobServiceClient.fromConnectionString(`DefaultEndpointsProtocol=https;AccountName=${accountName};AccountKey=${apiKey};EndpointSuffix=core.windows.net`);
 const containerClient = blobServiceClient.getContainerClient(containername);
@@ -129,7 +130,7 @@ async function sendToMedistics(data) {
             {
                 headers: {
                     "Content-Type": "application/json",
-                    "Cookie": MEDISTICS_COOKIE
+                    // "Cookie": MEDISTICS_COOKIE
                 }
             }
         );
