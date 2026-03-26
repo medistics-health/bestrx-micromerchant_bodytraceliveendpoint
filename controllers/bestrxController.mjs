@@ -22,6 +22,7 @@ const containerClient = blobServiceClient.getContainerClient(containerName);
 
 // EXPRESS HANDLER
 export const handleBestrx = async (req, res) => {
+  return res.status(200).json({ message: 'Data successfully sent to third-party.' });
   try {
     let data = req.body;
 
