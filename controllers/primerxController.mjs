@@ -19,7 +19,7 @@ const containerClient = blobServiceClient.getContainerClient(containerName);
 
 // Main request handler
 export const handlePrimerx = async (req, res) => {
-  return res.status(200).json({ message: 'Data successfully sent to third-party.' });
+  return res.status(404).json({ message: 'Not found' });
   try {
     let data = req.body;
 
